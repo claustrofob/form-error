@@ -189,4 +189,4 @@
 
         return this;
     };
-})($);
+})(jQuery);
