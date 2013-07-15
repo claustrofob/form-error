@@ -65,10 +65,17 @@
                 return this.form.find(':input.error');
             },
 
+            /**
+             * @param input - jQuery object | field name | undefined
+             * if no params passed show errors on all fields
+             */
             showError: function(input) {
                 var _this = this;
                 if (input === undefined){
                     input = this.getErrorInputs();
+                } else if (typeof input == 'string'){
+                    //input name
+                    input = this.findInputByName(input);
                 }
 
                 return $(input).each(function(){
@@ -79,10 +86,17 @@
                 });
             },
 
+            /**
+             * @param input - jQuery object | field name | undefined
+             * if no params passed hide errors on all fields
+             */
             hideError: function(input) {
                 var _this = this;
                 if (input === undefined){
                     input = this.getErrorInputs();
+                } else if (typeof input == 'string'){
+                    //input name
+                    input = this.findInputByName(input);
                 }
 
                 return $(input).each(function(){
@@ -90,6 +104,22 @@
                     e.currentTarget = this;
 
                     _this.form.data('tooltip').leave(e);
+                });
+            },
+
+            setError: function(input, message){
+                var _this = this;
+                if (typeof input == 'string'){
+                    var fieldName = input;
+                    input = this.findInputByName(fieldName);
+                    input.data('initiator', fieldName);
+                }
+
+                return $(input).each(function(){
+                    $(this).addClass('error')
+                           .data('errors', message);
+
+                    _this.initLabel(this);
                 });
             },
 
@@ -144,14 +174,9 @@
                     this.unbindError(this.getErrorInputs());
 
                     for (fieldName in errors){
-                        var field = this.findInputByName(fieldName);
-                        field.addClass('error')
-                             .data('initiator', fieldName)
-                             .data('errors', errors[fieldName]);
+                        this.setError(fieldName, errors[fieldName]);
                     }
                 }
-
-                this.initLabel(this.getErrorInputs());
             },
 
             destroy: function(){
@@ -165,6 +190,7 @@
     var publicMethods = {
         "show": "showError",
         "hide": "hideError",
+        "error": "setError",
         "destroy": "destroy"
     };
 
