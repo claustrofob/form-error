@@ -28,18 +28,18 @@ $("form").formError({
 
 ## Methods ##
 
-* `show` - opens up a tooltip.  
+* __show__ - opens up a tooltip.  
   `$("form").formError("show", "user[first_name]")` to open tooltip on the `"user[first_name]"` field,
   `$("form").formError("show")` to open tooltips on all error fields.
   
-* `hide` - hides a tooltip.  
+* __hide__ - hides a tooltip.  
   `$("form").formError("hide", "user[first_name]")` to hide tooltip on the `"user[first_name]"` field,
   `$("form").formError("hide")` to hide tooltips on all error fields.
   
-* `error` - set error on an input.  
+* __error__ - set error on an input.  
   `$("form").formError("error", "user[first_name]", "Value cannot be empty")` - sets the tooltip message and hightlights the input.
   
-* `destroy` - removes plugin from the form.  
+* __destroy__ - removes plugin from the form.  
   `$("form").formError("destroy")`
 
 To remove all errors from a form simply call plugin without arguments or with an empty object: `$("form").formError({})`
