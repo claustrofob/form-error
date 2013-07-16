@@ -21,10 +21,8 @@ to activate errors on invalid fields
 
 ```js
 $("form").formError({
-		"errors": {
 				"user[first_name]": "Value cannot be empty",
 				"user[last_name]": "Value cannot be empty"
-		}
 });
 ```
 
@@ -44,7 +42,7 @@ $("form").formError({
 * `destroy` - removes plugin from the form.  
   `$("form").formError("destroy")`
 
-To remove all errors from a form simply pass an empty `error` object into options: `$("form").formError({"errors": {}})`
+To remove all errors from a form simply call plugin without arguments or with an empty object: `$("form").formError({})`
 
 ## Demo ##
 
