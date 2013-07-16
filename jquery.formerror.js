@@ -170,9 +170,9 @@
             },
 
             initErrors: function(errors){
-                if (typeof errors == 'object'){
-                    this.unbindError(this.getErrorInputs());
+                this.unbindError(this.getErrorInputs());
 
+                if (typeof errors == 'object'){
                     for (fieldName in errors){
                         this.setError(fieldName, errors[fieldName]);
                     }
@@ -194,10 +194,6 @@
         "destroy": "destroy"
     };
 
-    var defaults = {
-        "errors": false
-    };
-
     $.fn.formError = function() {
         var args = Array.prototype.slice.call(arguments);
         var options = args.shift();
@@ -208,8 +204,7 @@
             if (typeof options == 'string'){
                 publicMethods[options] ? form[publicMethods[options]].apply(form, args) : 0;
             } else {
-                options = $.extend(defaults, options);
-                form.initErrors(options.errors);
+                form.initErrors(options);
             }
         });
 
