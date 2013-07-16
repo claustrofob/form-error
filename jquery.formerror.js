@@ -184,6 +184,12 @@
                 this.form.off('.callFormError');
                 this.form.tooltip('destroy');
                 this.form.removeData('isFormError.callFormError');
+            },
+
+            setOptions: function(options){
+                if (typeof options == 'object'){
+                    //@todo: set options
+                }
             }
     };
 
@@ -191,7 +197,8 @@
         "show": "showError",
         "hide": "hideError",
         "error": "setError",
-        "destroy": "destroy"
+        "destroy": "destroy",
+        "options": "setOptions"
     };
 
     $.fn.formError = function() {
