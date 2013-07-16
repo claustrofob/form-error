@@ -44,5 +44,6 @@ $("form").formError({
 
 To remove all errors from a form simply call plugin without arguments or with an empty object: `$("form").formError({})`
 
+## Examples ##
 
-* [demos](http://claustrofob.github.io/form-error/demo/)
+* [examples](http://claustrofob.github.io/form-error/demo/)

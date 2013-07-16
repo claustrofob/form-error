@@ -10,6 +10,21 @@
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
       }
+      
+      input.error, label.error{
+        color: #b94a48;
+      }
+      
+      input.error{
+        border-color: #b94a48;
+      }
+      
+      input.error:focus{
+        border-color: #b94a48;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+        -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+      }
     </style>
     
     <script src="js/jquery-1.10.2.min.js"></script>
@@ -91,8 +106,13 @@
                     "user[last_name]": "Last name is required",
                     "user[email]": "Email is required",
                     "user[password]": "Password is required",
-                    "terms": "You must acept Terms &amp; Conditions",
+                    "terms": "You must acept Terms & Conditions",
                 });
+            });
+            
+            $("form").on("reset", function(e){
+                e.preventDefault();
+                $(this).formError();
             });
         });
         </script>
