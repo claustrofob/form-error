@@ -14,7 +14,7 @@
     
     <script src="js/jquery-1.10.2.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="https://raw.github.com/claustrofob/form-error/master/jquery.formerror.js"></script>
+    <script type="text/javascript" src="https://raw.github.com/claustrofob/form-error/master/jquery.formerror.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   </head>
   <body>
@@ -26,7 +26,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="#">jQuery formError plugin</a>
+          <a class="brand" href="/">jQuery formError plugin</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
               <li class="active"><a href="#">Examples</a></li>
@@ -38,9 +38,65 @@
     
     <div class="container">
 
-      <h1>Examples</h1>
-      <p>Use this document as a way to quick start any new project.<br> All you get is this message and a barebones HTML document.</p>
+        <h1>Examples</h1>
 
-    </div> <!-- /container -->
+        <div class="well">
+          <form class="form-horizontal">
+            <div class="control-group">
+              <label class="control-label" for="first_name">First name</label>
+              <div class="controls">
+                <input id="first_name" type="text" name="user[first_name]" value="">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="last_name">Last name</label>
+              <div class="controls">
+                <input id="last_name" type="text" name="user[last_name]" value="">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="email">Email</label>
+              <div class="controls">
+                <input id="email" type="text" name="user[email]" value="">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="password">Password</label>
+              <div class="controls">
+                <input id="password" type="password" name="user[password]" value="">
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="controls">
+                <label class="checkbox">
+                    <input type="checkbox" name="terms">
+                    I accept Terms &amp; Conditions
+                </label>
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="controls">
+                <button type="submit" class="btn btn-primary">Show errors</button>
+                <button type="reset" class="btn">Hide errors</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <script>
+        $(function(){
+            $("form").on("submit", function(e){
+                e.preventDefault();
+                $(this).formError({
+                    "user[first_name]": "First name is required",
+                    "user[last_name]": "Last name is required",
+                    "user[email]": "Email is required",
+                    "user[password]": "Password is required",
+                    "terms": "You must acept Terms &amp; Conditions",
+                });
+            });
+        });
+        </script>
+
+  </div> <!-- /container -->
   </body>
 </html>
