@@ -170,27 +170,31 @@
                 this.form.removeData('isFormError.callFormError');
             },
 
-            setOptions: function(options){
-                if (typeof options == 'object'){
-                    //@todo: set options
-                }
+            setPosition: function(position){
+                this.tooltip.setPosition(position);
             }
     };
 
     function Tooltip(form) {
         this.form = form;
-
-        form.tooltip({
-            "trigger": "manual",
-            "placement": function(tip, el){
-                var $el = $(el);
-                return $el.data('error-position') ? $el.data('error-position') : $.fn.formError.defaults.position;
-            },
-            "animation": false,
-            "title": function(){
-                return $(this).data('errors');
-            }
-        });
+        this.position = $.fn.formError.position;
+        
+        if (!form.data('tooltip')){
+            var _this = this;
+            form.tooltip({
+                "trigger": "manual",
+                "placement": function(tip, el){
+                    var $el = $(el);
+                    return $el.data('error-position') ? $el.data('error-position') : _this.position;
+                },
+                "animation": false,
+                "title": function(){
+                    return $(this).data('errors');
+                }
+            });
+        }
+        
+        this.tooltip = form.data('tooltip');
     };
 
     Tooltip.prototype = {
@@ -198,16 +202,18 @@
             $(el).data('errors', message);
         },
 
+        setPosition: function(position){
+            this.position = position;
+        },
+        
         show: function(el){
-            var tooltip = this.form.data('tooltip');
-            tooltip.$element = $(el);
-            tooltip.show();
+            this.tooltip.$element = $(el);
+            this.tooltip.show();
         },
 
         hide: function(el){
-            var tooltip = this.form.data('tooltip');
-            tooltip.$element = $(el);
-            tooltip.hide();
+            this.tooltip.$element = $(el);
+            this.tooltip.hide();
         }
     };
 
@@ -216,7 +222,7 @@
         "hide": "hideError",
         "error": "setError",
         "destroy": "destroy",
-        "options": "setOptions"
+        "position": "setPosition"
     };
 
     $.fn.formError = function() {
@@ -236,8 +242,6 @@
         return this;
     };
 
-    $.fn.formError.defaults = {
-        "position": "bottom"
-    };
+    $.fn.formError.position = "bottom";
 
 })(jQuery);

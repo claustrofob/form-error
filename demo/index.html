@@ -108,6 +108,7 @@
                     "user[password]": "Password is required",
                     "terms": "You must acept Terms & Conditions",
                 });
+                $(this).formError('position', "right");
             });
 
             $("form").on("reset", function(e){
