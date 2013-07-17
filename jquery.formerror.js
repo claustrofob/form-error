@@ -11,17 +11,9 @@
 
         var _this = this;
 
-        form.tooltip({
-            "trigger": "manual",
-            "placement": "bottom",
-            "animation": false,
-            "title": function(){
-                return $(this).data('errors');
-            },
-            "selector": ':input'
-        })
-        //support of "sum-changed" event; @see jquery.money.js
-        .on('change.callFormError sum-changed.callFormError', ':input', function(e){
+        this.tooltip = new Tooltip(form);
+
+        form.on('change.callFormError sum-changed.callFormError', ':input', function(e){
             var $this = $(this);
             if (!$this.hasClass('error')) return;
 
@@ -79,10 +71,7 @@
                 }
 
                 return $(input).each(function(){
-                    var e = $.Event('mouseenter');
-                    e.currentTarget = this;
-
-                    _this.form.data('tooltip').enter(e);
+                   _this.tooltip.show(this);
                 });
             },
 
@@ -100,10 +89,7 @@
                 }
 
                 return $(input).each(function(){
-                    var e = $.Event('mouseleave');
-                    e.currentTarget = this;
-
-                    _this.form.data('tooltip').leave(e);
+                    _this.tooltip.hide(this);
                 });
             },
 
@@ -116,9 +102,8 @@
                 }
 
                 return $(input).each(function(){
-                    $(this).addClass('error')
-                           .data('errors', message);
-
+                    $(this).addClass('error');
+                    _this.tooltip.setMessage(this, message);
                     _this.initLabel(this);
                 });
             },
@@ -193,6 +178,40 @@
             }
     };
 
+    function Tooltip(form) {
+        this.form = form;
+
+        form.tooltip({
+            "trigger": "manual",
+            "placement": function(tip, el){
+                var $el = $(el);
+                return $el.data('error-position') ? $el.data('error-position') : $.fn.formError.defaults.position;
+            },
+            "animation": false,
+            "title": function(){
+                return $(this).data('errors');
+            }
+        });
+    };
+
+    Tooltip.prototype = {
+        setMessage: function(el, message){
+            $(el).data('errors', message);
+        },
+
+        show: function(el){
+            var tooltip = this.form.data('tooltip');
+            tooltip.$element = $(el);
+            tooltip.show();
+        },
+
+        hide: function(el){
+            var tooltip = this.form.data('tooltip');
+            tooltip.$element = $(el);
+            tooltip.hide();
+        }
+    };
+
     var publicMethods = {
         "show": "showError",
         "hide": "hideError",
@@ -217,4 +236,9 @@
 
         return this;
     };
+
+    $.fn.formError.defaults = {
+        "position": "bottom"
+    };
+
 })(jQuery);

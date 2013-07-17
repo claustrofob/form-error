@@ -10,15 +10,15 @@
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
       }
-      
+
       input.error, label.error{
         color: #b94a48;
       }
-      
+
       input.error{
         border-color: #b94a48;
       }
-      
+
       input.error:focus{
         border-color: #b94a48;
         -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
@@ -26,7 +26,7 @@
         box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
       }
     </style>
-    
+
     <script src="js/jquery-1.10.2.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="../jquery.formerror.js"></script>
@@ -50,7 +50,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="container">
 
         <h1>Examples</h1>
@@ -60,13 +60,13 @@
             <div class="control-group">
               <label class="control-label" for="first_name">First name</label>
               <div class="controls">
-                <input id="first_name" type="text" name="user[first_name]" value="">
+                <input id="first_name" type="text" name="user[first_name]" data-error-position="left" value="">
               </div>
             </div>
             <div class="control-group">
               <label class="control-label" for="last_name">Last name</label>
               <div class="controls">
-                <input id="last_name" type="text" name="user[last_name]" value="">
+                <input id="last_name" type="text" name="user[last_name]" data-error-position="right" value="">
               </div>
             </div>
             <div class="control-group">
@@ -84,7 +84,7 @@
             <div class="control-group">
               <div class="controls">
                 <label class="checkbox">
-                    <input type="checkbox" name="terms">
+                    <input type="checkbox" name="terms" data-error-position="left">
                     I accept Terms &amp; Conditions
                 </label>
               </div>
@@ -109,7 +109,7 @@
                     "terms": "You must acept Terms & Conditions",
                 });
             });
-            
+
             $("form").on("reset", function(e){
                 e.preventDefault();
                 $(this).formError();
