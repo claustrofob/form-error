@@ -4,11 +4,14 @@
 (function ($) {
 
     function FormError(form) {
+        if (form.data('formError')) {
+            return form.data('formError');
+        }
+
+        form.data('formError', this);
+        
         this.form = form;
         this.tooltip = new Tooltip(form);
-
-        if (form.data('isFormError.callFormError')) return;
-        form.data('isFormError.callFormError', true);
 
         var _this = this;
 
@@ -165,9 +168,8 @@
 
             destroy: function(){
                 this.unbindError(this.getErrorInputs());
-                this.form.off('.callFormError');
-                this.form.tooltip('destroy');
-                this.form.removeData('isFormError.callFormError');
+                this.form.off('.callFormError').removeData('formError');
+                this.tooltip.destroy();
             },
 
             setPosition: function(position){
@@ -179,20 +181,18 @@
         this.form = form;
         this.position = $.fn.formError.position;
         
-        if (!form.data('tooltip')){
-            var _this = this;
-            form.tooltip({
-                "trigger": "manual",
-                "placement": function(tip, el){
-                    var $el = $(el);
-                    return $el.data('error-position') ? $el.data('error-position') : _this.position;
-                },
-                "animation": false,
-                "title": function(){
-                    return $(this).data('errors');
-                }
-            });
-        }
+        var _this = this;
+        form.tooltip({
+            "trigger": "manual",
+            "placement": function(tip, el){
+                var $el = $(el);
+                return $el.data('error-position') ? $el.data('error-position') : _this.position;
+            },
+            "animation": false,
+            "title": function(){
+                return $(this).data('errors');
+            }
+        });
         
         this.tooltip = form.data('tooltip');
     };
@@ -214,6 +214,11 @@
         hide: function(el){
             this.tooltip.$element = $(el);
             this.tooltip.hide();
+        },
+        
+        destroy: function(){
+            this.tooltip.$element = this.form;
+            this.tooltip.destroy();
         }
     };
 
