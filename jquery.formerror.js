@@ -5,13 +5,12 @@
 
     function FormError(form) {
         this.form = form;
+        this.tooltip = new Tooltip(form);
 
         if (form.data('isFormError.callFormError')) return;
         form.data('isFormError.callFormError', true);
 
         var _this = this;
-
-        this.tooltip = new Tooltip(form);
 
         form.on('change.callFormError sum-changed.callFormError', ':input', function(e){
             var $this = $(this);
