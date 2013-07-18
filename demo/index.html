@@ -108,7 +108,7 @@
                     "user[password]": "Password is required",
                     "terms": "You must acept Terms & Conditions",
                 });
-                $(this).formError('show');
+                $(this).formError('show', null, true);
             });
 
             $("form").on("reset", function(e){

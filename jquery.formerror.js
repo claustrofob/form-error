@@ -9,9 +9,8 @@
         }
 
         form.data('formError', this);
-
         this.form = form;
-        this.tooltip = new Tooltip(form);
+        this.position = $.fn.formError.position;
 
         var _this = this;
 
@@ -59,13 +58,33 @@
                 return this.form.find(':input.error');
             },
 
+            getTooltip: function (input){
+                var input = $(input);
+                if (!input.data('tooltip')){
+                    var _this = this;
+                    input.tooltip({
+                        "trigger": "manual",
+                        "placement": function(tip, el){
+                            var $el = $(el);
+                            return $el.data('error-position') ? $el.data('error-position') : _this.position;
+                        },
+                        "animation": false,
+                        "title": function(){
+                            return $(this).data('errors');
+                        }
+                    });
+                }
+                
+                return input.data('tooltip');
+            },
+            
             /**
              * @param input - jQuery object | field name | undefined
              * if no params passed show errors on all fields
              */
-            showError: function(input) {
+            showError: function(input, persist) {
                 var _this = this;
-                if (input === undefined){
+                if (!input){
                     input = this.getErrorInputs();
                 } else if (typeof input == 'string'){
                     //input name
@@ -73,7 +92,10 @@
                 }
 
                 return $(input).each(function(){
-                   _this.tooltip.show(this);
+                    if (persist !== undefined){
+                        $(this).data('error-persist', persist);
+                    }
+                   _this.getTooltip(this).show();
                 });
             },
 
@@ -83,7 +105,7 @@
              */
             hideError: function(input) {
                 var _this = this;
-                if (input === undefined){
+                if (!input){
                     input = this.getErrorInputs();
                 } else if (typeof input == 'string'){
                     //input name
@@ -91,7 +113,9 @@
                 }
 
                 return $(input).each(function(){
-                    _this.tooltip.hide(this);
+                    if (!$(this).data('error-persist')){
+                        _this.getTooltip(this).hide();
+                    }
                 });
             },
 
@@ -105,13 +129,18 @@
 
                 return $(input).each(function(){
                     $(this).addClass('error');
-                    _this.tooltip.setMessage(this, message);
+                    $(this).data('errors', message);
                     _this.initLabel(this);
                 });
             },
 
             unbindError: function(input) {
+                var _this = this;
                 input.removeClass('error').removeData('initiator');
+                input.each(function(){
+                    _this.getTooltip(this).destroy();
+                });
+                
                 this.initLabel(input);
                 this.hideError(input);
             },
@@ -169,62 +198,11 @@
             destroy: function(){
                 this.unbindError(this.getErrorInputs());
                 this.form.off('.formError').removeData('formError');
-                this.tooltip.destroy();
             },
 
             setPosition: function(position){
-                this.tooltip.setPosition(position);
+                this.position = position;
             }
-    };
-
-    function Tooltip(form) {
-        this.form = form;
-        this.position = $.fn.formError.position;
-    };
-
-    Tooltip.prototype = {
-        create: function (el){
-            var el = $(el);
-            var _this = this;
-
-            el.tooltip({
-                "trigger": "manual",
-                "placement": function(tip, el){
-                    var $el = $(el);
-                    return $el.data('error-position') ? $el.data('error-position') : _this.position;
-                },
-                "animation": false,
-                "title": function(){
-                    return $(this).data('errors');
-                }
-            });
-        },
-
-        get: function(el){
-            var el = $(el);
-            if (!el.data('tooltip')) this.create(el);
-            return el.data('tooltip');
-        },
-
-        setMessage: function(el, message){
-            $(el).data('errors', message);
-        },
-
-        setPosition: function(position){
-            this.position = position;
-        },
-
-        show: function(el){
-            this.get(el).show();
-        },
-
-        hide: function(el){
-            this.get(el).hide();
-        },
-
-        destroy: function(){
-
-        }
     };
 
     var publicMethods = {
