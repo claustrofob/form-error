@@ -9,20 +9,20 @@
         }
 
         form.data('formError', this);
-        
+
         this.form = form;
         this.tooltip = new Tooltip(form);
 
         var _this = this;
 
-        form.on('change.callFormError sum-changed.callFormError', ':input', function(e){
+        form.on('change.formError sum-changed.formError', ':input', function(e){
             var $this = $(this);
             if (!$this.hasClass('error')) return;
 
             var el = _this.findInputByName($this.data('initiator'), $this);
             _this.unbindError(el);
         })
-        .on('mouseenter.callFormError mouseleave.callFormError focusin.callFormError focusout.callFormError', ':input', function(e){
+        .on('mouseenter.formError mouseleave.formError focusin.formError focusout.formError', ':input', function(e){
             var $this = $(this);
             if (!$this.hasClass('error')) return;
 
@@ -38,8 +38,8 @@
                     break;
             }
         })
-        .on('mouseenter.callFormError mouseleave.callFormError', 'label', function(e){
-            var input = $(this).data('for.callFormError');
+        .on('mouseenter.formError mouseleave.formError', 'label', function(e){
+            var input = $(this).data('for.formError');
             if (!input || !input.hasClass('error')) return;
 
             switch (e.type){
@@ -150,7 +150,7 @@
                     }
 
                     if (label.length){
-                        label.data('for.callFormError', $this);
+                        label.data('for.formError', $this);
                         $this.hasClass('error') ? label.addClass('error') : label.removeClass('error');
                     }
                 });
@@ -168,7 +168,7 @@
 
             destroy: function(){
                 this.unbindError(this.getErrorInputs());
-                this.form.off('.callFormError').removeData('formError');
+                this.form.off('.formError').removeData('formError');
                 this.tooltip.destroy();
             },
 
@@ -180,24 +180,32 @@
     function Tooltip(form) {
         this.form = form;
         this.position = $.fn.formError.position;
-        
-        var _this = this;
-        form.tooltip({
-            "trigger": "manual",
-            "placement": function(tip, el){
-                var $el = $(el);
-                return $el.data('error-position') ? $el.data('error-position') : _this.position;
-            },
-            "animation": false,
-            "title": function(){
-                return $(this).data('errors');
-            }
-        });
-        
-        this.tooltip = form.data('tooltip');
     };
 
     Tooltip.prototype = {
+        create: function (el){
+            var el = $(el);
+            var _this = this;
+
+            el.tooltip({
+                "trigger": "manual",
+                "placement": function(tip, el){
+                    var $el = $(el);
+                    return $el.data('error-position') ? $el.data('error-position') : _this.position;
+                },
+                "animation": false,
+                "title": function(){
+                    return $(this).data('errors');
+                }
+            });
+        },
+
+        get: function(el){
+            var el = $(el);
+            if (!el.data('tooltip')) this.create(el);
+            return el.data('tooltip');
+        },
+
         setMessage: function(el, message){
             $(el).data('errors', message);
         },
@@ -205,20 +213,17 @@
         setPosition: function(position){
             this.position = position;
         },
-        
+
         show: function(el){
-            this.tooltip.$element = $(el);
-            this.tooltip.show();
+            this.get(el).show();
         },
 
         hide: function(el){
-            this.tooltip.$element = $(el);
-            this.tooltip.hide();
+            this.get(el).hide();
         },
-        
+
         destroy: function(){
-            this.tooltip.$element = this.form;
-            this.tooltip.destroy();
+
         }
     };
 
