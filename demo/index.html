@@ -56,17 +56,18 @@
         <h1>Examples</h1>
 
         <div class="well">
-          <form class="form-horizontal">
+          <h4>Dynamically added errors</h4>
+          <form id="dynamic-errors" class="form-horizontal">
             <div class="control-group">
               <label class="control-label" for="first_name">First name</label>
               <div class="controls">
-                <input id="first_name" type="text" name="user[first_name]" data-error-position="left" value="">
+                <input id="first_name" type="text" name="user[first_name]" value="">
               </div>
             </div>
             <div class="control-group">
               <label class="control-label" for="last_name">Last name</label>
               <div class="controls">
-                <input id="last_name" type="text" name="user[last_name]" data-error-position="right" value="">
+                <input id="last_name" type="text" name="user[last_name]" value="">
               </div>
             </div>
             <div class="control-group">
@@ -84,36 +85,105 @@
             <div class="control-group">
               <div class="controls">
                 <label class="checkbox">
-                    <input type="checkbox" name="terms" data-error-position="left">
+                    <input type="checkbox" name="terms" data-error-position="bottom">
                     I accept Terms &amp; Conditions
                 </label>
               </div>
             </div>
             <div class="control-group">
               <div class="controls">
-                <button type="submit" class="btn btn-primary">Show errors</button>
-                <button type="reset" class="btn">Hide errors</button>
+                <button type="submit" class="btn btn-primary">Show</button>
+                <button type="button" id="persist" class="btn">Persist</button>
+                <button type="reset" class="btn">Hide</button>
               </div>
             </div>
           </form>
         </div>
         <script>
         $(function(){
-            $("form").on("submit", function(e){
+            var errors = {
+                "user[first_name]": "First name is required",
+                "user[last_name]": "Last name is required",
+                "user[email]": "Email is required",
+                "user[password]": "Password is required",
+                "terms": "You must acept Terms & Conditions"
+            };
+
+            var form = $('#dynamic-errors');
+
+            form.on("submit", function(e){
                 e.preventDefault();
-                $(this).formError({
-                    "user[first_name]": "First name is required",
-                    "user[last_name]": "Last name is required",
-                    "user[email]": "Email is required",
-                    "user[password]": "Password is required",
-                    "terms": "You must acept Terms & Conditions",
-                });
-                $(this).formError('show', null, true);
+                form.formError(errors)
+                    .formError('position', "right");
             });
 
-            $("form").on("reset", function(e){
+            $("#persist").on("click", function(e){
                 e.preventDefault();
-                $(this).formError();
+                form.formError(errors)
+                    .formError('position', "right")
+                    .formError('show', null, true);
+            });
+
+            form.on("reset", function(e){
+                e.preventDefault();
+                form.formError({});
+            });
+        });
+        </script>
+
+
+        <div class="well">
+          <h4>Errors defined in input attributes</h4>
+          <form id="static-errors" class="form-horizontal">
+            <div class="control-group">
+              <label class="control-label" for="first_name">First name</label>
+              <div class="controls">
+                <input id="first_name" type="text" name="user[first_name]" class="error" data-errors="First name is required" value="">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="last_name">Last name</label>
+              <div class="controls">
+                <input id="last_name" type="text" name="user[last_name]" class="error" data-errors="Last name is required" value="">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="email">Email</label>
+              <div class="controls">
+                <input id="email" type="text" name="user[email]" class="error" data-errors="Email is required" value="">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="password">Password</label>
+              <div class="controls">
+                <input id="password" type="password" name="user[password]" class="error" data-errors="Password is required" value="">
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="controls">
+                <label class="checkbox">
+                    <input type="checkbox" name="terms" class="error" data-errors="You must acept Terms & Conditions" data-error-position="bottom">
+                    I accept Terms &amp; Conditions
+                </label>
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="controls">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="reset" class="btn">Hide</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <script>
+        $(function(){
+            var form = $('#static-errors');
+            form.formError()
+                .formError('position', "right");
+
+            form.on("reset", function(e){
+                e.preventDefault();
+                form.formError({});
             });
         });
         </script>

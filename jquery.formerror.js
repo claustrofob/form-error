@@ -60,7 +60,8 @@
 
             getTooltip: function (input){
                 var input = $(input);
-                if (!input.data('tooltip')){
+                var obj = input.data('tooltip');
+                if (!obj){
                     var _this = this;
                     input.tooltip({
                         "trigger": "manual",
@@ -73,11 +74,16 @@
                             return $(this).data('errors');
                         }
                     });
+
+                    obj = input.data('tooltip');
+                    obj.setMessage = function(message){
+                        this.$element.data('errors', message);
+                    };
                 }
-                
-                return input.data('tooltip');
+
+                return obj;
             },
-            
+
             /**
              * @param input - jQuery object | field name | undefined
              * if no params passed show errors on all fields
@@ -129,7 +135,9 @@
 
                 return $(input).each(function(){
                     $(this).addClass('error');
-                    $(this).data('errors', message);
+                    if (typeof message == 'string'){
+                        _this.getTooltip(this).setMessage(message);
+                    }
                     _this.initLabel(this);
                 });
             },
@@ -140,9 +148,8 @@
                 input.each(function(){
                     _this.getTooltip(this).destroy();
                 });
-                
+
                 this.initLabel(input);
-                this.hideError(input);
             },
 
             findInputByName: function(initiator, field) {
@@ -165,13 +172,14 @@
             },
 
             initLabel: function(input) {
+                var _this = this;
                 return $(input).each(function(){
                     var $this = $(this);
                     var id = $this.attr('id');
                     var label  = $();
 
                     if (id){
-                        label = $('label[for='+id+']');
+                        label = _this.form.find('label[for='+id+']');
                     }
 
                     if (!label.length){
@@ -186,12 +194,14 @@
             },
 
             initErrors: function(errors){
-                this.unbindError(this.getErrorInputs());
-
                 if (typeof errors == 'object'){
+                    this.unbindError(this.getErrorInputs());
+
                     for (fieldName in errors){
                         this.setError(fieldName, errors[fieldName]);
                     }
+                } else {
+                    this.setError(this.getErrorInputs());
                 }
             },
 
