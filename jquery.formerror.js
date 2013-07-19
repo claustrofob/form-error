@@ -72,11 +72,23 @@
                         "animation": false,
                         "title": function(){
                             return $(this).data('errors');
-                        }
+                        },
+                        "html": true
                     });
 
                     obj = input.data('tooltip');
                     obj.setMessage = function(message){
+                        if (typeof message == 'object'){
+                            var html = $('<dl></dl>');
+                            for (var i in message){
+                                console.log(message[i]);
+                                var li = $('<dt>');
+                                li.text(message[i]);
+                                html.append(li);
+                            }
+
+                            message = $('<div />').append(html).html();
+                        }
                         this.$element.data('errors', message);
                     };
                 }
@@ -135,7 +147,9 @@
 
                 return $(input).each(function(){
                     $(this).addClass('error');
-                    if (typeof message == 'string'){
+
+                    var messageType = typeof message;
+                    if (messageType == 'string' || messageType == 'object'){
                         _this.getTooltip(this).setMessage(message);
                     }
                     _this.initLabel(this);
@@ -145,6 +159,7 @@
             unbindError: function(input) {
                 var _this = this;
                 input.removeClass('error').removeData('initiator');
+                input.removeData('error-persist');
                 input.each(function(){
                     _this.getTooltip(this).destroy();
                 });
