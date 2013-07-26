@@ -71,24 +71,27 @@
                         },
                         "animation": false,
                         "title": function(){
-                            return $(this).data('errors');
+                            var message = $(this).data('errors');
+
+                            if (typeof message != 'object'){
+                                message = [message];
+                            }
+
+                            var html = document.createElement('dl');
+                            for (var i in message){
+                                var li = document.createElement('dt');
+                                li.innerText = message[i];
+                                html.appendChild(li);
+                            }
+                            message = document.createDocumentFragment().appendChild(html).innerHTML;
+
+                            return message;
                         },
                         "html": true
                     });
 
                     obj = input.data('tooltip');
                     obj.setMessage = function(message){
-                        if (typeof message == 'object'){
-                            var html = $('<dl></dl>');
-                            for (var i in message){
-                                console.log(message[i]);
-                                var li = $('<dt>');
-                                li.text(message[i]);
-                                html.append(li);
-                            }
-
-                            message = $('<div />').append(html).html();
-                        }
                         this.$element.data('errors', message);
                     };
                 }
