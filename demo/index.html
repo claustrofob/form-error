@@ -61,13 +61,13 @@
             <div class="control-group">
               <label class="control-label" for="first_name">First name</label>
               <div class="controls">
-                <input id="first_name" type="text" name="user[first_name]" value="">
+                <input id="first_name" type="text" name="user[first_name]" value="" data-initiator="d">
               </div>
             </div>
             <div class="control-group">
               <label class="control-label" for="last_name">Last name</label>
               <div class="controls">
-                <input id="last_name" type="text" name="user[last_name]" value="">
+                <input id="last_name" type="text" name="user[last_name]" value="" data-initiator="d">
               </div>
             </div>
             <div class="control-group">
@@ -80,6 +80,22 @@
               <label class="control-label" for="password">Password</label>
               <div class="controls">
                 <input id="password" type="password" name="user[password]" value="">
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="controls">
+                <label class="checkbox">
+                    <input type="checkbox" name="vehicles[]" data-error-position="bottom">
+                    Car
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox" name="vehicles[]" data-error-position="bottom">
+                    Train
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox" name="vehicles[]" data-error-position="bottom">
+                    Bike
+                </label>
               </div>
             </div>
             <div class="control-group">
@@ -106,7 +122,8 @@
                 "user[last_name]": "Last name is required",
                 "user[email]": "Email is required",
                 "user[password]": "Password is required",
-                "terms": "You must acept Terms & Conditions"
+                "terms": "You must acept Terms & Conditions",
+                "vehicles": "Select vehicle"
             };
 
             var form = $('#dynamic-errors');
@@ -157,6 +174,22 @@
               <label class="control-label" for="password">Password</label>
               <div class="controls">
                 <input id="password" type="password" name="user[password]" class="error" data-errors="Password is required" value="">
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="controls">
+                <label class="checkbox">
+                    <input type="checkbox" name="vehicles[]" class="error" data-error-position="bottom" data-errors="Select vehicle">
+                    Car
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox" name="vehicles[]" class="error" data-error-position="bottom" data-errors="Select vehicle">
+                    Train
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox" name="vehicles[]" class="error" data-error-position="bottom" data-errors="Select vehicle">
+                    Bike
+                </label>
               </div>
             </div>
             <div class="control-group">

@@ -18,7 +18,7 @@
             var $this = $(this);
             if (!$this.hasClass('error')) return;
 
-            var el = _this.findInputByName($this.data('initiator'), $this);
+            var el = _this.findInput($this);
             _this.unbindError(el);
         })
         .on('mouseenter.formError mouseleave.formError focusin.formError focusout.formError', ':input', function(e){
@@ -106,12 +106,11 @@
                 var _this = this;
                 if (!input){
                     input = this.getErrorInputs();
-                } else if (typeof input == 'string'){
-                    //input name
-                    input = this.findInputByName(input);
+                } else {
+                    input = this.findInput(input);
                 }
 
-                return $(input).each(function(){
+                return input.each(function(){
                     if (persist !== undefined){
                         $(this).data('error-persist', persist);
                     }
@@ -127,12 +126,11 @@
                 var _this = this;
                 if (!input){
                     input = this.getErrorInputs();
-                } else if (typeof input == 'string'){
-                    //input name
-                    input = this.findInputByName(input);
+                } else {
+                    input = this.findInput(input);
                 }
 
-                return $(input).each(function(){
+                return input.each(function(){
                     if (!$(this).data('error-persist')){
                         _this.getTooltip(this).hide();
                     }
@@ -141,13 +139,13 @@
 
             setError: function(input, message){
                 var _this = this;
-                if (typeof input == 'string'){
-                    var fieldName = input;
-                    input = this.findInputByName(fieldName);
-                    input.data('initiator', fieldName);
+                if (!input){
+                    input = this.getErrorInputs();
+                } else {
+                    input = this.findInput(input);
                 }
 
-                return $(input).each(function(){
+                return input.each(function(){
                     $(this).addClass('error');
 
                     var messageType = typeof message;
@@ -160,7 +158,7 @@
 
             unbindError: function(input) {
                 var _this = this;
-                input.removeClass('error').removeData('initiator');
+                input.removeClass('error');
                 input.removeData('error-persist');
                 input.each(function(){
                     _this.getTooltip(this).destroy();
@@ -169,23 +167,33 @@
                 this.initLabel(input);
             },
 
-            findInputByName: function(initiator, field) {
-                var el = $(field);
+            findInput: function(input) {
+                var initiator = null;
 
-                if (initiator){
-                    el = this.form.find(':input[name^="'+initiator+'["]');
-                    if (!el.size()){
-                        el = this.form.find(':input[name="'+initiator+'"]');
+                if (typeof input == 'string'){
+                    initiator = input;
+                } else {
+                    input = $(input);
+                    if (input.data('initiator')) initiator = input.data('initiator');
+                    else if (input.attr('name')) initiator = input.attr('name');
+                }
+
+                if (initiator !== null){
+                    input = this.form.find(':input[name^="'+initiator+'["]');
+                    if (!input.size()){
+                        input = this.form.find(':input[name="'+initiator+'"]');
                     }
                 }
 
-                //if field is hidden try to find visible input in the same container
-                if (el.attr('type') == 'hidden'){
-                    var vField = el.parent().find(':input[type!=hidden]').first();
-                    if (vField.length) el = vField;
-                }
+                input = $(input);
+                input.each(function(){
+                    var $this = $(this);
+                    if ($this.attr('name') != initiator){
+                        input.data('initiator', initiator);
+                    }
+                });
 
-                return el;
+                return input;
             },
 
             initLabel: function(input) {
@@ -218,7 +226,7 @@
                         this.setError(fieldName, errors[fieldName]);
                     }
                 } else {
-                    this.setError(this.getErrorInputs());
+                    this.setError();
                 }
             },
 
@@ -227,8 +235,13 @@
                 this.form.off('.formError').removeData('formError');
             },
 
-            setPosition: function(position){
-                this.position = position;
+            setPosition: function(position, input){
+                if (!input){
+                    this.position = position;
+                } else {
+                    input = this.findInput(input);
+                    input.data('error-position', position);
+                }
             }
     };
 
