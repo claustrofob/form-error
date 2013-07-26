@@ -77,15 +77,14 @@
                                 message = [message];
                             }
 
-                            var html = document.createElement('dl');
+                            var html = document.createElement('div');
                             for (var i in message){
-                                var li = document.createElement('dt');
+                                var li = document.createElement('div');
                                 li.innerText = message[i];
                                 html.appendChild(li);
                             }
-                            message = document.createDocumentFragment().appendChild(html).innerHTML;
 
-                            return message;
+                            return html;
                         },
                         "html": true
                     });
