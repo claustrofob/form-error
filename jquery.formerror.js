@@ -104,10 +104,13 @@
              */
             showError: function(input, persist) {
                 var _this = this;
-                if (!input){
+                
+                if (typeof input == 'string'){
+                    input = this.findInput(input);
+                } else if (!input){
                     input = this.getErrorInputs();
                 } else {
-                    input = this.findInput(input);
+                    input = $(input);
                 }
 
                 return input.each(function(){
@@ -124,10 +127,13 @@
              */
             hideError: function(input) {
                 var _this = this;
-                if (!input){
+                
+                if (typeof input == 'string'){
+                    input = this.findInput(input);
+                } else if (!input){
                     input = this.getErrorInputs();
                 } else {
-                    input = this.findInput(input);
+                    input = $(input);
                 }
 
                 return input.each(function(){
@@ -168,32 +174,27 @@
             },
 
             findInput: function(input) {
-                var initiator = null;
+                var name = null;
 
                 if (typeof input == 'string'){
-                    initiator = input;
+                    name = input;
                 } else {
                     input = $(input);
-                    if (input.data('initiator')) initiator = input.data('initiator');
-                    else if (input.attr('name')) initiator = input.attr('name');
+                    if (input.data('group')) name = input.data('group');
+                    else if (input.attr('name')) name = input.attr('name');
                 }
 
-                if (initiator !== null){
-                    input = this.form.find(':input[name^="'+initiator+'["]');
+                if (name !== null){
+                    input = this.form.find(':input[name^="'+name+'["]');
                     if (!input.size()){
-                        input = this.form.find(':input[name="'+initiator+'"]');
+                        input = this.form.find(':input[name="'+name+'"]');
+                    }
+                    if (!input.size()){
+                        input = this.form.find(':input[data-group="'+name+'"]');
                     }
                 }
 
-                input = $(input);
-                input.each(function(){
-                    var $this = $(this);
-                    if ($this.attr('name') != initiator){
-                        input.data('initiator', initiator);
-                    }
-                });
-
-                return input;
+                return $(input);
             },
 
             initLabel: function(input) {
