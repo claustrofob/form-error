@@ -18,7 +18,7 @@
             var $this = $(this);
             if (!$this.hasClass('error')) return;
 
-            var el = _this.findInput($this);
+            var el = _this.findInput($this, true);
             _this.unbindError(el);
         })
         .on('mouseenter.formError mouseleave.formError focusin.formError focusout.formError', ':input', function(e){
@@ -104,13 +104,11 @@
              */
             showError: function(input, persist) {
                 var _this = this;
-                
-                if (typeof input == 'string'){
-                    input = this.findInput(input);
-                } else if (!input){
+
+                if (!input){
                     input = this.getErrorInputs();
                 } else {
-                    input = $(input);
+                    input = this.findInput(input);
                 }
 
                 return input.each(function(){
@@ -127,13 +125,11 @@
              */
             hideError: function(input) {
                 var _this = this;
-                
-                if (typeof input == 'string'){
-                    input = this.findInput(input);
-                } else if (!input){
+
+                if (!input){
                     input = this.getErrorInputs();
                 } else {
-                    input = $(input);
+                    input = this.findInput(input);
                 }
 
                 return input.each(function(){
@@ -173,12 +169,12 @@
                 this.initLabel(input);
             },
 
-            findInput: function(input) {
+            findInput: function(input, findAll) {
                 var name = null;
 
                 if (typeof input == 'string'){
                     name = input;
-                } else {
+                } else if (findAll){
                     input = $(input);
                     if (input.data('group')) name = input.data('group');
                     else if (input.attr('name')) name = input.attr('name');
