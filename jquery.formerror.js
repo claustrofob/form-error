@@ -80,7 +80,7 @@
                             var html = document.createElement('div');
                             for (var i in message){
                                 var li = document.createElement('div');
-                                li.innerText = message[i];
+                                li.innerHTML = message[i];
                                 html.appendChild(li);
                             }
 
@@ -205,7 +205,7 @@
                     }
 
                     if (!label.length){
-                        label = $this.closest('label');
+                        label = $this.parents('label').last();
                     }
 
                     if (label.length){
