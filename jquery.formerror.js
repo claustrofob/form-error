@@ -59,19 +59,19 @@
             },
 
             getTooltip: function (input){
-                var input = $(input);
-                var obj = input.data('tooltip');
+                var input= $(input);
+                var target = input.closest(':visible');
+                var obj = target.data('tooltip');
                 if (!obj){
                     var _this = this;
-                    input.tooltip({
+                    target.tooltip({
                         "trigger": "manual",
                         "placement": function(tip, el){
-                            var $el = $(el);
-                            return $el.data('error-position') ? $el.data('error-position') : _this.position;
+                            return input.data('error-position') ? input.data('error-position') : _this.position;
                         },
                         "animation": false,
                         "title": function(){
-                            var message = $(this).data('errors');
+                            var message = input.data('errors');
 
                             if (typeof message != 'object'){
                                 message = [message];
@@ -89,9 +89,9 @@
                         "html": true
                     });
 
-                    obj = input.data('tooltip');
+                    obj = target.data('tooltip');
                     obj.setMessage = function(message){
-                        this.$element.data('errors', message);
+                        input.data('errors', message);
                     };
                 }
 
