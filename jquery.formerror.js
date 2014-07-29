@@ -3,6 +3,83 @@
  */
 (function ($) {
 
+    /**
+     * error handler must implement 3 methods: show, hide, destroy
+     */
+    var DefaultErrorHandler = (function(){
+
+        function getTitle(handler){
+            var message = handler.input.data('errors') || '';
+
+            if (typeof message != 'object'){
+                message = [message];
+            }
+
+            var html = document.createElement('div');
+            for (var i in message){
+                if (!message[i].length) continue;
+
+                var li = document.createElement('div');
+                li.innerHTML = message[i];
+                html.appendChild(li);
+            }
+
+            return html;
+        }
+
+        function createTooltip(handler){
+            handler.target.tooltip({
+                "trigger": "manual",
+                "placement": function(tip, el){
+                    return handler.input.data('error-position') ? handler.input.data('error-position') : handler.position;
+                },
+                "animation": false,
+                "title": function(){
+                    return getTitle(handler);
+                },
+                "html": true,
+                container: 'body'
+            });
+        }
+
+        function getTooltip(handler){
+            var obj = handler.target.data('bs.tooltip');
+            if (!obj){
+                createTooltip(handler);
+                obj = handler.target.data('bs.tooltip');            }
+
+            return obj;
+        }
+
+        function ErrorHandler(target, input, position) {
+            this.target = $(target);
+            this.input = $(input);
+            this.position = position;
+        }
+
+        ErrorHandler.prototype = {
+
+            target: null,
+            input: null,
+            position: null,
+
+            show: function(){
+                getTooltip(this).show();
+            },
+
+            hide: function(){
+                getTooltip(this).hide();
+            },
+
+            destroy: function(){
+                getTooltip(this).destroy();
+            }
+        };
+
+        return ErrorHandler;
+
+    })();
+
     function FormError(form) {
         if (form.data('formError')) {
             return form.data('formError');
@@ -11,6 +88,9 @@
         form.data('formError', this);
         this.form = form;
         this.position = $.fn.formError.position;
+        this.errorHandler = $.fn.formError.errorHandler;
+        this.errorBoxSelector = $.fn.formError.errorBoxSelector;
+        this.errorTargetSelector = $.fn.formError.errorTargetSelector;
 
         var _this = this;
 
@@ -27,7 +107,7 @@
             var input = $this.is('label') ? $this.data('for.formError') : $this;
 
             if (input && !input.hasClass('has-error')){
-                input = input.closest('.error-box').find(':input.has-error');
+                input = input.closest(_this.errorBoxSelector).find(':input.has-error');
             }
 
             if (!input || !input.hasClass('has-error')){
@@ -53,49 +133,27 @@
                 return this.form.find(':input.has-error');
             },
 
-            getTooltip: function (input){
+            getErrorTarget: function(input){
                 var input= $(input);
 
-                var target = input.closest('.error-message-target');
+                var target = input.closest(this.errorTargetSelector);
                 if (!target.length) target = input.closest(':visible');
 
-                var obj = target.data('bs.tooltip');
-                if (!obj){
-                    var _this = this;
-                    target.tooltip({
-                        "trigger": "manual",
-                        "placement": function(tip, el){
-                            return input.data('error-position') ? input.data('error-position') : _this.position;
-                        },
-                        "animation": false,
-                        "title": function(){
-                            var message = input.data('errors') || '';
+                return target;
+            },
 
-                            if (!message.length) return '';
+            getErrorHandler: function(input){
+                var input= $(input);
 
-                            if (typeof message != 'object'){
-                                message = [message];
-                            }
+                var target = this.getErrorTarget(input);
 
-                            var html = document.createElement('div');
-                            for (var i in message){
-                                var li = document.createElement('div');
-                                li.innerHTML = message[i];
-                                html.appendChild(li);
-                            }
-
-                            return html;
-                        },
-                        "html": true
-                    });
-
-                    obj = target.data('bs.tooltip');
-                    obj.setMessage = function(message){
-                        input.data('errors', message);
-                    };
+                var handler = target.data('formerror.handler');
+                if (!handler) {
+                    handler = new this.errorHandler(target, input, this.position);
+                    target.data('formerror.handler');
                 }
 
-                return obj;
+                return handler;
             },
 
             /**
@@ -115,7 +173,7 @@
                     if (persist !== undefined){
                         $(this).data('error-persist', persist);
                     }
-                   _this.getTooltip(this).show();
+                   _this.getErrorHandler(this).show();
                 });
             },
 
@@ -134,7 +192,7 @@
 
                 return input.each(function(){
                     if (!$(this).data('error-persist')){
-                        _this.getTooltip(this).hide();
+                        _this.getErrorHandler(this).hide();
                     }
                 });
             },
@@ -148,11 +206,13 @@
                 }
 
                 return input.each(function(){
-                    $(this).addClass('has-error').closest('.error-box').addClass('has-error');
+                    var $this = $(this);
+
+                    $this.addClass('has-error').closest(_this.errorBoxSelector).addClass('has-error');
 
                     var messageType = typeof message;
                     if (messageType == 'string' || messageType == 'object'){
-                        _this.getTooltip(this).setMessage(message);
+                        $this.data('errors', message);
                     }
                     _this.initLabel(this);
                 });
@@ -160,10 +220,11 @@
 
             unbindError: function(input) {
                 var _this = this;
-                input.removeClass('has-error').closest('.error-box').removeClass('has-error');
+                input.removeClass('has-error').closest(this.errorBoxSelector).removeClass('has-error');
                 input.removeData('error-persist');
                 input.each(function(){
-                    _this.getTooltip(this).destroy();
+                    _this.getErrorHandler(this).destroy();
+                    _this.getErrorTarget(this).removeData('formerror.handler');
                 });
 
                 this.initLabel(input);
@@ -268,5 +329,8 @@
     };
 
     $.fn.formError.position = "bottom";
+    $.fn.formError.errorHandler = DefaultErrorHandler;
+    $.fn.formError.errorBoxSelector = '.form-group';
+    $.fn.formError.errorTargetSelector = '.error-target';
 
 })(jQuery);

@@ -3,115 +3,122 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
     <title>Form-error by claustrofob</title>
 
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
     <style>
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
       }
-
-      input.error, label.error{
-        color: #b94a48;
-      }
-
-      input.error{
-        border-color: #b94a48;
-      }
-
-      input.error:focus{
-        border-color: #b94a48;
-        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
-        -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
-        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
-      }
     </style>
 
-    <script src="js/jquery-1.10.2.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script src="../jquery.formerror.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
   </head>
   <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="/">jQuery formError plugin</a>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-              <li class="active"><a href="#">Examples</a></li>
-            </ul>
-          </div><!--/.nav-collapse -->
+          <a class="navbar-brand" href="#">jQuery formError plugin</a>
         </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Examples</a></li>          </ul>
+        </div><!--/.nav-collapse -->
       </div>
     </div>
+
 
     <div class="container">
 
         <h1>Examples</h1>
 
         <div class="well">
+
           <h4>Dynamically added errors</h4>
+
           <form id="dynamic-errors" class="form-horizontal">
-            <div class="control-group">
-              <label class="control-label" for="first_name">First name</label>
-              <div class="controls">
-                <input id="first_name" type="text" name="user[first_name]" value="" data-group="name">
+
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="first_name">First name</label>
+              <div class="col-sm-6">
+                <input id="first_name" type="text" name="user[first_name]" value="" data-group="name" class="form-control">
               </div>
             </div>
-            <div class="control-group">
-              <label class="control-label" for="last_name">Last name</label>
-              <div class="controls">
-                <input id="last_name" type="text" name="user[last_name]" value="" data-group="name">
+
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="last_name">Last name</label>
+              <div class="col-sm-6">
+                <input id="last_name" type="text" name="user[last_name]" value="" data-group="name" class="form-control">
               </div>
             </div>
-            <div class="control-group">
-              <label class="control-label" for="email">Email</label>
-              <div class="controls">
-                <input id="email" type="text" name="user[email]" value="">
+
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="email">Email</label>
+              <div class="col-sm-6">
+                <input id="email" type="text" name="user[email]" value="" class="form-control">
               </div>
             </div>
-            <div class="control-group">
-              <label class="control-label" for="password">Password</label>
-              <div class="controls">
-                <input id="password" type="password" name="user[password]" value="">
+
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="password">Password</label>
+              <div class="col-sm-6">
+                <input id="password" type="password" name="user[password]" value="" class="form-control">
               </div>
             </div>
-            <div class="control-group">
-              <div class="controls">
-                <label class="checkbox">
-                    <span style="display:inline-block; width: 10px; height: 10px; border: 1px solid blue; margin-left: -20px;"><input type="checkbox" name="vehicles[]" data-error-position="left" style="display: none;"></span>
-                    Car
-                </label>
-                <label class="checkbox">
-                    <input type="checkbox" name="vehicles[]" data-error-position="bottom">
-                    Train
-                </label>
-                <label class="checkbox">
-                    <input type="checkbox" name="vehicles[]" data-error-position="bottom">
-                    Bike
-                </label>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-6">
+                  <div class="checkbox">
+                    <label>
+                        <span style="display:inline-block; width: 10px; height: 10px; border: 1px solid blue; margin-left: -20px;"><input type="checkbox" name="vehicles[]" data-error-position="left" style="display: none;"></span>
+                        Car
+                    </label>
+                  </div>
+                  <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="vehicles[]" data-error-position="bottom">
+                        Train
+                    </label>
+                  </div>
+                  <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="vehicles[]" data-error-position="bottom">
+                        Bike
+                    </label>
+                  </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-6">
+                <div class="checkbox">
+                  <label >
+                      <input type="checkbox" name="terms" data-error-position="bottom">
+                      I accept Terms &amp; Conditions
+                  </label>
+                </div>
               </div>
             </div>
-            <div class="control-group">
-              <div class="controls">
-                <label class="checkbox">
-                    <input type="checkbox" name="terms" data-error-position="bottom">
-                    I accept Terms &amp; Conditions
-                </label>
-              </div>
-            </div>
-            <div class="control-group">
-              <div class="controls">
-                <button type="submit" class="btn btn-primary">Show</button>
-                <button type="button" id="persist" class="btn">Persist</button>
-                <button type="reset" class="btn">Hide</button>
-              </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-6">
+                  <button type="submit" class="btn btn-primary">Show</button>
+                  <button type="button" id="persist" class="btn btn-default">Persist</button>
+                  <button type="reset" class="btn btn-default">Hide</button>
+                </div>
             </div>
           </form>
         </div>
@@ -151,59 +158,68 @@
 
         <div class="well">
           <h4>Errors defined in input attributes</h4>
+
           <form id="static-errors" class="form-horizontal">
-            <div class="control-group">
-              <label class="control-label" for="first_name">First name</label>
-              <div class="controls">
-                <input id="first_name" type="text" name="user[first_name]" class="error" data-errors="First name is required" value="">
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="first_name">First name</label>
+              <div class="col-sm-6">
+                <input id="first_name" type="text" name="user[first_name]" class="form-control has-error" data-errors="First name is required" value="">
               </div>
             </div>
-            <div class="control-group">
-              <label class="control-label" for="last_name">Last name</label>
-              <div class="controls">
-                <input id="last_name" type="text" name="user[last_name]" class="error" data-errors="Last name is required" value="">
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="last_name">Last name</label>
+              <div class="col-sm-6">
+                <input id="last_name" type="text" name="user[last_name]" class="form-control has-error" data-errors="Last name is required" value="">
               </div>
             </div>
-            <div class="control-group">
-              <label class="control-label" for="email">Email</label>
-              <div class="controls">
-                <input id="email" type="text" name="user[email]" class="error" data-errors="Email is required" value="">
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="email">Email</label>
+              <div class="col-sm-6">
+                <input id="email" type="text" name="user[email]" class="form-control has-error" data-errors="Email is required" value="">
               </div>
             </div>
-            <div class="control-group">
-              <label class="control-label" for="password">Password</label>
-              <div class="controls">
-                <input id="password" type="password" name="user[password]" class="error" data-errors="Password is required" value="">
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="password">Password</label>
+              <div class="col-sm-6">
+                <input id="password" type="password" name="user[password]" class="form-control has-error" data-errors="Password is required" value="">
               </div>
             </div>
-            <div class="control-group">
-              <div class="controls">
-                <label class="checkbox">
-                    <input type="checkbox" name="vehicles[]" class="error" data-error-position="bottom" data-errors="Select vehicle">
-                    Car
-                </label>
-                <label class="checkbox">
-                    <input type="checkbox" name="vehicles[]" class="error" data-error-position="bottom" data-errors="Select vehicle">
-                    Train
-                </label>
-                <label class="checkbox">
-                    <input type="checkbox" name="vehicles[]" class="error" data-error-position="bottom" data-errors="Select vehicle">
-                    Bike
-                </label>
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-6">
+                <div class="checkbox">
+                  <label>
+                      <input type="checkbox" name="vehicles[]" class="has-error" data-error-position="bottom" data-errors="Select vehicle">
+                      Car
+                  </label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                      <input type="checkbox" name="vehicles[]" class="has-error" data-error-position="bottom" data-errors="Select vehicle">
+                      Train
+                  </label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                      <input type="checkbox" name="vehicles[]" class="has-error" data-error-position="bottom" data-errors="Select vehicle">
+                      Bike
+                  </label>
+                </div>
               </div>
             </div>
-            <div class="control-group">
-              <div class="controls">
-                <label class="checkbox">
-                    <input type="checkbox" name="terms" class="error" data-errors="You must acept Terms & Conditions" data-error-position="bottom">
-                    I accept Terms &amp; Conditions
-                </label>
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-6">
+                <div class="checkbox">
+                  <label class="checkbox">
+                      <input type="checkbox" name="terms" class="has-error" data-errors="You must acept Terms & Conditions" data-error-position="bottom">
+                      I accept Terms &amp; Conditions
+                  </label>
+                </div>
               </div>
             </div>
-            <div class="control-group">
-              <div class="controls">
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-6">
                 <button type="submit" class="btn btn-primary">Submit</button>
-                <button type="reset" class="btn">Hide</button>
+                <button type="reset" class="btn btn-default">Hide</button>
               </div>
             </div>
           </form>
