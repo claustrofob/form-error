@@ -14,39 +14,34 @@
 
         var _this = this;
 
-        form.on('change.formError sum-changed.formError', ':input', function(e){
+        form.on('input.formError propertychange.formError change.formError update.formError', ':input', function(e){
             var $this = $(this);
-            if (!$this.hasClass('error')) return;
+            if (!$this.hasClass('has-error')) return;
 
             var el = _this.findInput($this, true);
             _this.unbindError(el);
         })
-        .on('mouseenter.formError mouseleave.formError focusin.formError focusout.formError', ':input', function(e){
+        .on('mouseenter.formError mouseleave.formError focusin.formError focusout.formError', ':input, label, .error-hover', function(e){
+
             var $this = $(this);
-            if (!$this.hasClass('error')) return;
+            var input = $this.is('label') ? $this.data('for.formError') : $this;
+
+            if (input && !input.hasClass('has-error')){
+                input = input.closest('.error-box').find(':input.has-error');
+            }
+
+            if (!input || !input.hasClass('has-error')){
+                return;
+            }
 
             switch (e.type){
                 case 'mouseenter':
                 case 'focusin':
-                    _this.showError(this);
-                    break;
-
-                case 'mouseleave':
-                case 'focusout':
-                    _this.hideError(this);
-                    break;
-            }
-        })
-        .on('mouseenter.formError mouseleave.formError', 'label', function(e){
-            var input = $(this).data('for.formError');
-            if (!input || !input.hasClass('error')) return;
-
-            switch (e.type){
-                case 'mouseenter':
                     _this.showError(input);
                     break;
 
                 case 'mouseleave':
+                case 'focusout':
                     _this.hideError(input);
                     break;
             }
@@ -55,13 +50,16 @@
 
     FormError.prototype = {
             getErrorInputs: function(){
-                return this.form.find(':input.error');
+                return this.form.find(':input.has-error');
             },
 
             getTooltip: function (input){
                 var input= $(input);
-                var target = input.closest(':visible');
-                var obj = target.data('tooltip');
+
+                var target = input.closest('.error-message-target');
+                if (!target.length) target = input.closest(':visible');
+
+                var obj = target.data('bs.tooltip');
                 if (!obj){
                     var _this = this;
                     target.tooltip({
@@ -71,7 +69,9 @@
                         },
                         "animation": false,
                         "title": function(){
-                            var message = input.data('errors');
+                            var message = input.data('errors') || '';
+
+                            if (!message.length) return '';
 
                             if (typeof message != 'object'){
                                 message = [message];
@@ -89,7 +89,7 @@
                         "html": true
                     });
 
-                    obj = target.data('tooltip');
+                    obj = target.data('bs.tooltip');
                     obj.setMessage = function(message){
                         input.data('errors', message);
                     };
@@ -148,7 +148,7 @@
                 }
 
                 return input.each(function(){
-                    $(this).addClass('error');
+                    $(this).addClass('has-error').closest('.error-box').addClass('has-error');
 
                     var messageType = typeof message;
                     if (messageType == 'string' || messageType == 'object'){
@@ -160,7 +160,7 @@
 
             unbindError: function(input) {
                 var _this = this;
-                input.removeClass('error');
+                input.removeClass('has-error').closest('.error-box').removeClass('has-error');
                 input.removeData('error-persist');
                 input.each(function(){
                     _this.getTooltip(this).destroy();
@@ -210,7 +210,7 @@
 
                     if (label.length){
                         label.data('for.formError', $this);
-                        $this.hasClass('error') ? label.addClass('error') : label.removeClass('error');
+                        $this.hasClass('has-error') ? label.addClass('has-error') : label.removeClass('has-error');
                     }
                 });
             },
