@@ -1,0 +1,21 @@
+{
+  "name": "jquery.formerror",
+  "version": "1.0.0",
+  "homepage": "https://github.com/claustrofob/form-error",
+  "authors": [
+    "claustrofob <claus@zlog.ru>"
+  ],
+  "description": "A jQuery plugin that helps you to show inputs error messages using Twitter Bootstrap Tooltip plugin",
+  "main": "./jquery.formerror.js",
+  "license": "MIT",
+  "dependencies": {
+    "jquery": ">=1.8"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
